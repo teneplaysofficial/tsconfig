@@ -35,7 +35,7 @@ Extend it in your `tsconfig.json`:
 | Option             | Value                                          | Description                                                                                                   |
 | ------------------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `target`           | `esnext`                                       | Compile to latest JS syntax                                                                                   |
-| `module`           | `nodenext`                                     | Node.js ESM/CJS module system                                                                                 |
+| `module`           | `esnext`                                       | Emits native ES module syntax without transforming imports/exports                                            |
 | `moduleResolution` | `bundler`                                      | Uses bundler-style resolution, bypassing Node ESM extension requirements and supporting flexible import paths |
 | `lib`              | `ESNext, DOM, DOM.Iterable, DOM.AsyncIterable` | Full browser + modern JS type definitions                                                                     |
 
