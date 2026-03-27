@@ -1,0 +1,23 @@
+{
+  "name": "@tenedev/tsconfig",
+  "version": "0.0.0",
+  "description": "Shared TypeScript configuration",
+  "type": "module",
+  "files": [
+    "tsconfig.json"
+  ],
+  "engines": {
+    "node": ">=14.17"
+  },
+  "exports": {
+    ".": "./tsconfig.json"
+  },
+  "peerDependencies": {
+    "typescript": "^6"
+  },
+  "keywords": [
+    "tsconfig",
+    "typescript"
+  ],
+  "license": "Apache-2.0"
+}
