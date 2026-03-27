@@ -32,12 +32,12 @@ Extend it in your `tsconfig.json`:
 
 ### Environment
 
-| Option             | Value                                          | Description                                   |
-| ------------------ | ---------------------------------------------- | --------------------------------------------- |
-| `target`           | `esnext`                                       | Compile to latest JS syntax                   |
-| `module`           | `nodenext`                                     | Node.js ESM/CJS module system                 |
-| `moduleResolution` | `nodenext`                                     | Resolves imports via `package.json` `exports` |
-| `lib`              | `ESNext, DOM, DOM.Iterable, DOM.AsyncIterable` | Full browser + modern JS type definitions     |
+| Option             | Value                                          | Description                                                                                                   |
+| ------------------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `target`           | `esnext`                                       | Compile to latest JS syntax                                                                                   |
+| `module`           | `nodenext`                                     | Node.js ESM/CJS module system                                                                                 |
+| `moduleResolution` | `bundler`                                      | Uses bundler-style resolution, bypassing Node ESM extension requirements and supporting flexible import paths |
+| `lib`              | `ESNext, DOM, DOM.Iterable, DOM.AsyncIterable` | Full browser + modern JS type definitions                                                                     |
 
 ### Strict & Safety
 
