@@ -1,0 +1,132 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version bump
+        type: choice
+        required: true
+        options:
+          - patch
+          - minor
+          - major
+          - prepatch
+          - preminor
+          - premajor
+          - prerelease
+
+      tag:
+        description: npm dist-tag
+        type: choice
+        required: true
+        default: latest
+        options:
+          - latest
+          - beta
+          - alpha
+          - rc
+          - next
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version
+        shell: bash
+        run: |
+          VERSION="${{ inputs.version }}"
+          TAG="${{ inputs.tag }}"
+
+          if [[ "$VERSION" == pre* ]]; then
+            if [[ "$TAG" == "latest" ]]; then
+              TAG="beta"
+            fi
+
+            npm version "$VERSION" \
+              --preid="$TAG" \
+              --no-git-tag-version
+          else
+            npm version "$VERSION" \
+              --no-git-tag-version
+          fi
+
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+
+      - name: Publish
+        run: npm publish --provenance --tag "$TAG"
+
+      - name: Read version
+        id: version
+        shell: bash
+        run: |
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "chore(release): v${{ steps.version.outputs.version }}"
+
+      - name: Create tag
+        run: |
+          git tag "v${{ steps.version.outputs.version }}"
+
+      - name: Push changes
+        run: |
+          git push origin HEAD
+          git push origin "v${{ steps.version.outputs.version }}"
+
+      - name: Generate release notes
+        id: notes
+        shell: bash
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
+
+          {
+            echo "body<<EOF"
+            echo "## Changes"
+            echo
+
+            if [ -n "$PREV_TAG" ]; then
+              git log "${PREV_TAG}..HEAD" --pretty=format:"- %s"
+            else
+              git log --pretty=format:"- %s"
+            fi
+
+            echo
+            echo
+            echo "**Full Changelog:** https://github.com/${{ github.repository }}/compare/${PREV_TAG}...v${{ steps.version.outputs.version }}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          body: ${{ steps.notes.outputs.body }}
+          prerelease: ${{ startsWith(inputs.version, 'pre') }}
