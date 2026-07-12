@@ -18,7 +18,7 @@
     ".": "./tsconfig.json"
   },
   "peerDependencies": {
-    "typescript": "^6"
+    "typescript": "^7.0.0"
   },
   "keywords": [
     "tsconfig",
