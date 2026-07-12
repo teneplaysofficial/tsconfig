@@ -2,6 +2,7 @@
 
 > Shared TypeScript configuration
 
+[![Publish](https://github.com/teneplaysofficial/tsconfig/actions/workflows/publish.yml/badge.svg)](https://github.com/teneplaysofficial/tsconfig/actions/workflows/publish.yml)
 [![npm version](https://img.shields.io/npm/v/@tenedev/tsconfig.svg?logo=npm&color=brightgreen)](https://www.npmjs.com/package/@tenedev/tsconfig)
 [![Downloads](https://img.shields.io/npm/dt/@tenedev/tsconfig?logo=npm)](https://www.npmjs.com/package/@tenedev/tsconfig)
 
@@ -11,7 +12,7 @@
 npm i -D @tenedev/tsconfig
 ```
 
-> Requires TypeScript `^6`
+> Requires TypeScript `^7`
 
 ## Usage
 
